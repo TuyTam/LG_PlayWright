@@ -6,7 +6,7 @@ export class ProductPage {
 
     constructor(private page: Page) {
         this.addToCartButton = this.page.getByRole('button', { name: 'Add to cart' });
-        this.cartLink = this.page.locator('.cart-type1').first();
+        this.cartLink = this.page.getByRole('link', { name: /\b\d+(?:.\d+)?\s*$/ }).first();
     }
 
     async addToCart() {

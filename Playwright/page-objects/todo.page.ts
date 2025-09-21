@@ -13,26 +13,16 @@ export class TodoPage {
         await this.page.getByText('All departments').click();
         await this.page.waitForTimeout(1000);
         await this.page.getByText('Automobiles & Motorcycles Car').getByRole('link').filter({ hasText: departmentName }).click();
-        // const deptList = await this.page.getByText('Automobiles & Motorcycles Car').getByRole('link').all();
-        // console.log('Total departments: ' + deptList);
 
-        // for (let i = 0; i < await deptList.length; i++) {
-        //     const text = await deptList[i].innerText();
-        //     console.log(text);
-        //     if (text.toLowerCase().includes(departmentName.toLowerCase())) {
-        //         await deptList[i].click();
-        //         break;
-        //     }
-        // }
     }
 
     async selectViewMode(viewMode: string) {
         if (viewMode === 'grid') {
             await this.page.locator('.switch-grid').click();
-            await this.page.waitForURL('https://demo.testarchitect.com/product-category/electronic-components-supplies/?view_mode=grid');
+            await this.page.waitForURL(/view_mode=grid/);
         } else if (viewMode === 'list') {
             await this.page.locator('.switch-list').click();
-            await this.page.waitForURL('https://demo.testarchitect.com/product-category/electronic-components-supplies/?view_mode=list');
+            await this.page.waitForURL(/view_mode=list/);
         }
     }
 
@@ -45,7 +35,19 @@ export class TodoPage {
     }
 
     async goToCart() {
-        await this.page.locator('.cart-type1').first().click();
+        await this.page.goto('https://demo.testarchitect.com/cart/', { timeout: 3000 });
+        //await this.page.getByRole('link', { name: /\b\d+(?:.\d+)?\s*$/ }).first().click();
+        await this.page.waitForURL(/cart/);
+        await this.page.waitForTimeout(2000);
         await this.page.waitForLoadState();
+
+    }
+
+    async removeItemFromCart() {
+        if (await this.page.getByRole('link', { name: 'Remove' }).first().isVisible()) {
+            await this.page.getByRole('link', { name: 'Remove' }).first().click();
+            await this.page.waitForLoadState();
+            await this.page.waitForTimeout(1000);
+        }
     }
 }

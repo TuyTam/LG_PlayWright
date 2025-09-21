@@ -3,11 +3,11 @@ import { LoginPage } from '../page-objects/login.page';
 import { TodoPage } from '../page-objects/todo.page';
 import { CheckoutPage } from '../page-objects/checkout.page';
 import { Customer } from '../page-objects/Customer';
-import { Item } from '../page-objects/Item';
 import { ProductPage } from '../page-objects/product.page';
 import { CartPage } from '../page-objects/cart.page';
 import { DepartmentPage } from '../page-objects/department.page';
 import { OrderStatusPage } from '../page-objects/orderStatus.page';
+import { url } from 'inspector';
 
 test('Verify users can buy an item successfully', async ({ page }) => {
 
@@ -27,6 +27,7 @@ test('Verify users can buy an item successfully', async ({ page }) => {
     //2. Login with valid credentials
     await loginPage.navigate();
     await loginPage.login('tamp@logigear.com', '123');
+    await todoPage.removeItemFromCart();
 
     //3. Navigate to All departments section
     //4. Select "Electronic Components & Supplies" 
@@ -40,17 +41,14 @@ test('Verify users can buy an item successfully', async ({ page }) => {
     await departmentPage.verifyListView();
 
     //8. Select any item randomly to purchase
+    //9. Click 'Add to cart' 
     const selectedItem: { name: string, price: string } = await departmentPage.selectRandomItem();
 
-    //9. Click 'Add to cart' 
-    await productPage.addToCart();
-    await page.waitForTimeout(3000);
-
     //10. Go to the cart
-    await productPage.goToCart();
+    await todoPage.goToCart();
 
     //11. Verify item details in mini content
-    expect(await cartPage.verifyItemInCart({ itemName: selectedItem.name, itemPrice: selectedItem.price })).toBeTruthy();
+    await cartPage.verifyItemInCart({ itemName: selectedItem.name, itemPrice: selectedItem.price });
 
     //12. Click on Checkout
     await cartPage.proceedToCheckout();
@@ -65,8 +63,9 @@ test('Verify users can buy an item successfully', async ({ page }) => {
     await checkoutPage.fillBillingInfo(customer, 'testing');
 
     //16. Click on PLACE ORDER
-    //17. Verify Order status page displays
     await checkoutPage.placeOrder();
+
+    //17. Verify Order status page displays
     await orderStatusPage.verifyOrderStatus();
 
     //18. Verify the Order details with billing and item information

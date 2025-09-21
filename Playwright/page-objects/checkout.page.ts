@@ -14,20 +14,22 @@ export class CheckoutPage {
     readonly email: Locator;
     readonly orderNotes: Locator;
     readonly placeOrderButton: Locator;
+    private orderSuccessMsg: Locator;
 
     constructor(private page: Page) {
-        this.firstName = page.getByRole('textbox', { name: 'First name' });
-        this.lastName = page.getByRole('textbox', { name: 'Last name' });
-        this.companyName = page.getByRole('textbox', { name: 'Company name (optional)' });
-        this.countryRegion = page.getByRole('combobox', { name: 'Country / Region' });
-        this.streetAddress = page.getByRole('textbox', { name: 'Street address' });
-        this.city = page.getByRole('textbox', { name: 'Town / City' });
-        this.state = page.getByRole('combobox', { name: 'State' });
-        this.zipCode = page.getByRole('textbox', { name: 'ZIP Code' });
-        this.phone = page.getByRole('textbox', { name: 'Phone' });
-        this.email = page.getByRole('textbox', { name: 'Email address' });
-        this.orderNotes = page.getByRole('textbox', { name: 'Order notes' });
-        this.placeOrderButton = page.getByRole('button', { name: 'Place order' });
+        this.firstName = this.page.getByRole('textbox', { name: 'First name' });
+        this.lastName = this.page.getByRole('textbox', { name: 'Last name' });
+        this.companyName = this.page.getByRole('textbox', { name: 'Company name (optional)' });
+        this.countryRegion = this.page.getByRole('combobox', { name: 'Country / Region' });
+        this.streetAddress = this.page.getByRole('textbox', { name: 'Street address' });
+        this.city = this.page.getByRole('textbox', { name: 'Town / City' });
+        this.state = this.page.getByRole('combobox', { name: 'State' });
+        this.zipCode = this.page.getByRole('textbox', { name: 'ZIP Code' });
+        this.phone = this.page.getByRole('textbox', { name: 'Phone' });
+        this.email = this.page.getByRole('textbox', { name: 'Email address' });
+        this.orderNotes = this.page.getByRole('textbox', { name: 'Order notes' });
+        this.placeOrderButton = this.page.getByRole('button', { name: 'Place order' });
+        this.orderSuccessMsg = this.page.getByText('Thank you. Your order has');
     }
 
     async verifyCheckoutPage() {
@@ -38,15 +40,23 @@ export class CheckoutPage {
         console.log('Filling billing info with customer:', customer.printInfo());
         await this.firstName.fill(customer.firstName);
         await this.lastName.fill(customer.lastName);
+        await this.page.waitForTimeout(5000);
         if (customer.company && customer.company.trim() !== '') {
             await this.companyName.fill(customer.company);
         }
+
+        await this.page.waitForTimeout(5000);
+        console.log(`Country ${customer.country}`);
         await this.countryRegion.click();
         await this.page.getByRole('option', { name: `${customer.country}`, exact: true }).click();
+        //await this.countryRegion.selectOption(customer.country, { timeout: 3000 });
+        //await this.countryRegion.selectOption({ label: `${customer.country}` }, { timeout: 3000 });
         await this.streetAddress.fill(customer.address);
         await this.city.fill(customer.city);
         await this.state.click();
-        await this.page.getByRole('option', { name: `${customer.state}` }).click();
+        await this.page.getByRole('option', { name: `${customer.state}`, exact: true }).click();
+        //await this.state.selectOption(customer.state, { timeout: 3000 });
+        //await this.state.selectOption({ label: `${customer.state}` });
         await this.zipCode.fill(customer.zipCode);
         await this.phone.fill(customer.phone);
         await this.email.fill(customer.email);
@@ -63,5 +73,11 @@ export class CheckoutPage {
     async placeOrder() {
         await this.placeOrderButton.click();
         await this.page.waitForLoadState();
+        await this.page.waitForTimeout(5000);
+    }
+
+    async verifyOrderSuccess() {
+        await expect(this.orderSuccessMsg).toBeVisible({ timeout: 3000 });
+        await expect(this.orderSuccessMsg).toHaveText(/received/i);
     }
 }
