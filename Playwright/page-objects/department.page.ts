@@ -28,40 +28,26 @@ export class DepartmentPage {
 
     async verifyGridView() {
         await this.gridViewButton.click();
-        await this.page.waitForURL('https://demo.testarchitect.com/product-category/electronic-components-supplies/?view_mode=grid');
-        return expect(this.page.locator('.products-grid')).toBeVisible();
+        return await expect(this.page).toHaveURL(/view_mode=grid/);
     }
     async verifyListView() {
         await this.listViewButton.click();
-        await this.page.waitForURL('https://demo.testarchitect.com/product-category/electronic-components-supplies/?view_mode=list');
-        return expect(this.page.locator('.products-list')).toBeVisible();
+        return await expect(this.page).toHaveURL(/view_mode=list/);
     }
 
     async selectRandomItem(): Promise<{ name: string, price: string }> {
-        const itemCount = await this.productItems.getAttribute('data-row-count');
-        console.log('Total items: ' + itemCount);
-        const randomIndex = Math.floor(Math.random() * parseInt(itemCount!));
-        const item = this.productItems.getByRole('heading').nth(randomIndex);
+        const itemCount = await this.productItems.getByRole('heading').count();
+        const randomIndex = Math.floor(Math.random() * itemCount);
+        console.log(`Total items: ${itemCount} and random index: ${randomIndex}`);
 
-        const name = await item.getByRole('link').innerText();
-        console.log('Selected item name: ' + name);
-
-
-        let price: string;
-
-
-
-        if (await this.page.getByRole('link', { name: `${name}` }).getByRole('insertion').isVisible()) {
-            price = await this.page.getByText(name).getByRole('insertion').locator('bdi').innerText();
-            console.log('Price found in insertion tag: ' + price);
-        } else {
-            price = await this.productItems.locator('bdi').nth(randomIndex).innerText();
-            console.log('Price found in bdi tag: ' + price);
-        }
+        const name = await this.productItems.getByRole('heading').nth(randomIndex).innerText();
+        //const name1 = await this.page.locator('.products-list').getByRole('heading').nth(10).innerText();
+        const selectedItem = this.page.locator('.product-details').filter({ hasText: name });
+        const price = await selectedItem.locator('bdi').count() > 1 ? await selectedItem.locator('bdi').nth(1).innerText() : await selectedItem.locator('bdi').first().innerText();
 
         console.log(`Selected item: ${name} - Price: ${price}`);
-
-        await item.click();
+        await selectedItem.getByRole('link', { name: /Add/ }).click();
+        await this.page.waitForTimeout(3000);
 
         return { name, price };
     }
