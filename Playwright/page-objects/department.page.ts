@@ -15,9 +15,6 @@ export class DepartmentPage {
         this.productItems = this.page.locator('.products-list');
     }
 
-
-
-
     async navigateToDepartment(departmentName: string) {
         await this.allDepartmentsLink.click();
         await this.page.waitForLoadState();
