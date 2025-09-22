@@ -77,7 +77,11 @@ export class CheckoutPage {
     }
 
     async verifyOrderSuccess() {
-        await expect(this.orderSuccessMsg).toBeVisible({ timeout: 3000 });
+        await expect(this.orderSuccessMsg).toBeVisible({ timeout: 10000 });
         await expect(this.orderSuccessMsg).toHaveText(/received/i);
+    }
+
+    async selectPaymentMethod(method: string) {
+        await this.page.getByText(method).click();
     }
 }

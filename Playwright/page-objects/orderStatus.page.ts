@@ -1,4 +1,5 @@
 import { Locator, Page, expect } from "@playwright/test";
+import { DateUtils } from "../utils/DateUtils";
 export class OrderStatusPage {
     private orderStatus: Locator;
     private orderDetailsSection: Locator;
@@ -21,16 +22,7 @@ export class OrderStatusPage {
         await expect(this.page.getByRole('listitem').filter({ hasText: 'Total:' })).toContainText(expected.itemPrice);
         await expect(this.page.getByRole('listitem').filter({ hasText: 'Payment method: Direct bank' })).toBeVisible();
 
-        // Get current date in "Month Day, Year" format
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-
-        // Assert the date field displays the correct format
-        await expect(this.page.getByText('Date:')).toContainText(formattedDate);
+        await expect(this.page.getByText('Date:')).toContainText(DateUtils.getCurrentDateFormatted());
 
     }
 

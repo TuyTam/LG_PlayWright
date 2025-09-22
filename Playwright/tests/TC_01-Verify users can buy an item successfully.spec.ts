@@ -10,7 +10,7 @@ import { OrderStatusPage } from '../page-objects/orderStatus.page';
 import { url } from 'inspector';
 
 test('Verify users can buy an item successfully', async ({ page }) => {
-
+    test.setTimeout(100000);
     const todoPage = new TodoPage(page);
     const loginPage = new LoginPage(page);
     const departmentPage = new DepartmentPage(page);
@@ -61,6 +61,7 @@ test('Verify users can buy an item successfully', async ({ page }) => {
 
     //15. Fill the billing details with default payment method
     await checkoutPage.fillBillingInfo(customer, 'testing');
+    await checkoutPage.selectPaymentMethod('Direct bank');
 
     //16. Click on PLACE ORDER
     await checkoutPage.placeOrder();

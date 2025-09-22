@@ -15,10 +15,12 @@ export class ShopPage {
 
     async openShop() {
         await this.shopLink.click();
+        await this.page.waitForLoadState();
     }
 
     async addItemToCart(itemName: string) {
         const itemCard = this.page.locator('.product-details').filter({ hasText: `${itemName}` });
+        //const itemCard = this.page.locator('.product-details').filter({ hasText: `Beats Studio Wireless Over-Ear` });
         await itemCard.getByRole('link', { name: /Add/ }).first().click();
         console.log(`Added item: ${itemName} to cart`);
         await this.page.waitForTimeout(2000); // wait for 1 second to ensure the item is added

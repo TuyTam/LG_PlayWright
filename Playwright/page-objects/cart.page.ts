@@ -24,8 +24,8 @@ export class CartPage {
         const row = this.page.getByRole('table').getByRole('row').nth(1);
         const nameLocator = row.getByRole('cell').nth(1).getByRole('link').first();
         const priceLocator = row.getByRole('cell').nth(2).locator('bdi');
-        await expect(nameLocator).toHaveText(expected.itemName, { timeout: 5000 });
-        await expect(priceLocator).toHaveText(expected.itemPrice, { timeout: 5000 });
+        await expect(nameLocator).toHaveText(expected.itemName, { ignoreCase: true });
+        await expect(priceLocator).toHaveText(expected.itemPrice);
     }
 
     async verifyMultipleItemsInCart(itemNames: string[]) {

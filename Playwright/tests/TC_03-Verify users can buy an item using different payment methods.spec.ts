@@ -7,7 +7,7 @@ import { CartPage } from '../page-objects/cart.page';
 import { CheckoutPage } from '../page-objects/checkout.page';
 import { Customer } from '../page-objects/Customer';
 
-test('TC_02: Verify users can buy multiple item successfully', async ({ page }) => {
+test.only('TC_03: Verify users can buy an item using different payment methods', async ({ page }) => {
     test.setTimeout(100000);
     const todoPage = new TodoPage(page);
     const loginPage = new LoginPage(page);
@@ -15,7 +15,7 @@ test('TC_02: Verify users can buy multiple item successfully', async ({ page }) 
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
     const customer = new Customer('Tam', 'Phan', 'tamp@logigear.com', '1234 Main St', 'Houston', 'Texas', '77072', 'United States (US)', '0123456789', 'LogiGear');
-    const selectedItems = ['AirPods', 'Beats Studio Wireless Over-Ear', 'Velleman Vertex K 8400'];
+    const selectedItem = 'Beats Studio Wireless Over-Ear';
 
     // 1. Open browser and go to https://demo.testarchitect.com/
     await todoPage.goToHomePage();
@@ -28,20 +28,18 @@ test('TC_02: Verify users can buy multiple item successfully', async ({ page }) 
     // 3. Go to Shop page
     await shopPage.openShop();
 
-    // 4. Select multiple items and add to cart
-    await shopPage.addMultipleItemsToCart(selectedItems);
+    // 4. Select an item and add to cart
+    await shopPage.addItemToCart(selectedItem);
 
-    // 5. Go to the cart and verify all selected items
-    await todoPage.goToCart();
-    await cartPage.verifyMultipleItemsInCart(selectedItems);
-    // Note: You would need to store the expected item details when adding to cart to verify them here
+    // 5. Go to Checkout page
+    await todoPage.goToCheckOut();
 
-    // 6. Proceed to checkout and confirm order
-    await cartPage.proceedToCheckout();
+    // 6. Choose a different payment method (Direct bank transfer, Cash on delivery)
+    // 7. Complete the payment process
+    await checkoutPage.selectPaymentMethod('Cash on delivery');
     await checkoutPage.fillBillingInfo(customer, 'testing');
     await checkoutPage.placeOrder();
 
-    // 7. Verify order confirmation message
+    //8. Verify order confirmation message
     await checkoutPage.verifyOrderSuccess();
-
 });
