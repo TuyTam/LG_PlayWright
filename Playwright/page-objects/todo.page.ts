@@ -16,15 +16,7 @@ export class TodoPage {
 
     }
 
-    async selectViewMode(viewMode: string) {
-        if (viewMode === 'grid') {
-            await this.page.locator('.switch-grid').click();
-            await this.page.waitForURL(/view_mode=grid/);
-        } else if (viewMode === 'list') {
-            await this.page.locator('.switch-list').click();
-            await this.page.waitForURL(/view_mode=list/);
-        }
-    }
+
 
     async addItemToCart(itemName: string) {
         await this.page.getByRole('link').filter({ hasText: `${itemName}` }).click();
@@ -45,6 +37,12 @@ export class TodoPage {
     async goToCheckOut() {
         await this.page.goto('https://demo.testarchitect.com/checkout/');
         await this.page.waitForURL(/checkout/);
+        await this.page.waitForLoadState();
+    }
+
+    async goToMyAccount() {
+        await this.page.goto('https://demo.testarchitect.com/my-account/');
+        await this.page.waitForURL(/my-account/);
         await this.page.waitForLoadState();
     }
 

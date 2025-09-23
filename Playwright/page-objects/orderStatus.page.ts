@@ -2,11 +2,9 @@ import { Locator, Page, expect } from "@playwright/test";
 import { DateUtils } from "../utils/DateUtils";
 export class OrderStatusPage {
     private orderStatus: Locator;
-    private orderDetailsSection: Locator;
 
     constructor(private page: Page) {
         this.orderStatus = this.page.getByRole('heading', { name: 'Order received' });
-        this.orderDetailsSection = this.page.getByRole('list').filter({ hasText: 'Order number' });
     }
 
     async verifyOrderStatus() {

@@ -3,23 +3,19 @@ import { LoginPage } from '../page-objects/login.page';
 import { TodoPage } from '../page-objects/todo.page';
 import { CheckoutPage } from '../page-objects/checkout.page';
 import { Customer } from '../page-objects/Customer';
-import { ProductPage } from '../page-objects/product.page';
 import { CartPage } from '../page-objects/cart.page';
 import { DepartmentPage } from '../page-objects/department.page';
 import { OrderStatusPage } from '../page-objects/orderStatus.page';
-import { url } from 'inspector';
 
 test('Verify users can buy an item successfully', async ({ page }) => {
     test.setTimeout(100000);
     const todoPage = new TodoPage(page);
     const loginPage = new LoginPage(page);
     const departmentPage = new DepartmentPage(page);
-    const productPage = new ProductPage(page);
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
     const orderStatusPage = new OrderStatusPage(page);
     const customer = new Customer('Tam', 'Phan', 'tamp@logigear.com', '1234 Main St', 'Houston', 'Texas', '77072', 'United States (US)', '0123456789', 'LogiGear');
-
 
     //1. Open browser and go to await page.goto('https://demo.testarchitect.com/');    
     await todoPage.goToHomePage();
