@@ -4,7 +4,7 @@ import { LoginPage } from '../page-objects/login.page';
 import { MyAccountPage } from '../page-objects/myAccount.page';
 
 
-test.only('TC_05: Verify orders appear in order history', async ({ page }) => {
+test('TC_05: Verify orders appear in order history', async ({ page }) => {
     test.setTimeout(100000);
     const todoPage = new TodoPage(page);
     const loginPage = new LoginPage(page);
