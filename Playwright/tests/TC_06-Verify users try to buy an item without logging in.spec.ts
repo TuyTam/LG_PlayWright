@@ -1,11 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 import { TodoPage } from '../page-objects/todo.page';
 import { LoginPage } from '../page-objects/login.page';
 import { ShopPage } from '../page-objects/shop.page';
 import { CheckoutPage } from '../page-objects/checkout.page';
 import { Customer } from '../page-objects/Customer';
 
-test.only('TC_06: Verify users try to buy an item without logging in (As a guest)', async ({ page }) => {
+test('TC_06: Verify users try to buy an item without logging in (As a guest)', async ({ page }) => {
     test.setTimeout(100000);
     const todoPage = new TodoPage(page);
     const loginPage = new LoginPage(page);

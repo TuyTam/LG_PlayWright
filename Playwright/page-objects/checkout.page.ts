@@ -84,4 +84,8 @@ export class CheckoutPage {
     async selectPaymentMethod(method: string) {
         await this.page.getByText(method).click();
     }
+
+    async verifyErrorsOfMissingFields(missingFields: string[]) {
+        missingFields.forEach((i) => expect(this.page.getByText(`Billing ${i} is a required field`)).toBeVisible());
+    }
 }
