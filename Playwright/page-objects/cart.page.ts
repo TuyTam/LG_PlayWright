@@ -65,4 +65,13 @@ export class CartPage {
         await this.checkoutButton.click();
         await this.page.waitForLoadState();
     }
+
+    async clearShoppingCart() {
+        await this.page.getByText('Clear shopping cart').click();
+        await this.page.waitForLoadState();
+    }
+
+    async verifyCartEmpty() {
+        await expect(this.page.getByRole('heading', { name: 'YOUR SHOPPING CART IS EMPTY' })).toBeVisible();
+    }
 }

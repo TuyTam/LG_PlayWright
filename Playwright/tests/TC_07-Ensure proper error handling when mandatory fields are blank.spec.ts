@@ -4,7 +4,7 @@ import { ShopPage } from '../page-objects/shop.page';
 import { CheckoutPage } from '../page-objects/checkout.page';
 import { Customer } from '../page-objects/Customer';
 
-test.only('TC_07: Ensure proper error handling when mandatory fields are blank', async ({ page }) => {
+test('TC_07: Ensure proper error handling when mandatory fields are blank', async ({ page }) => {
     test.setTimeout(100000);
     const todoPage = new TodoPage(page);
     const shopPage = new ShopPage(page);

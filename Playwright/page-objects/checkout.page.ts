@@ -88,4 +88,8 @@ export class CheckoutPage {
     async verifyErrorsOfMissingFields(missingFields: string[]) {
         missingFields.forEach((i) => expect(this.page.getByText(`Billing ${i} is a required field`)).toBeVisible());
     }
+
+    async clearShoppingCart() {
+        await this.page.getByText('Clear shopping cart').click();
+    }
 }
