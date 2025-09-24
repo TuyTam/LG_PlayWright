@@ -60,4 +60,8 @@ export class TodoPage {
         }
 
     }
+
+    getNumberFromText(text: string) {
+        return parseFloat(text.replace(/[^0-9.]/g, ""));
+    }
 }

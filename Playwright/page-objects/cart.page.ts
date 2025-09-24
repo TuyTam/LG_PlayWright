@@ -1,4 +1,5 @@
 import { Locator, Page, expect } from "@playwright/test";
+import { text } from "stream/consumers";
 
 export class CartPage {
 
@@ -49,12 +50,11 @@ export class CartPage {
             if (!itemFound) {
                 throw new Error(`Item not found in cart: ${item}`);
             }
+            expect(itemFound).toBeTruthy();
             itemFound = false; // reset for next item
 
         }
-
     }
-
 
     async verifyItemsCount(expectedCount: number) {
         await expect(this.cartItems).toHaveCount(expectedCount);
@@ -74,4 +74,25 @@ export class CartPage {
     async verifyCartEmpty() {
         await expect(this.page.getByRole('heading', { name: 'YOUR SHOPPING CART IS EMPTY' })).toBeVisible();
     }
+
+    async verifyItemQuantityAndSubTotal(itemName: string, expected: { quantity: string, subTotal: string }) {
+        await this.page.waitForTimeout(5000);
+        const row = this.page.getByRole('table').getByRole('row').filter({ hasText: `${itemName}` });
+        await expect(row.getByRole('spinbutton')).toHaveValue(expected.quantity, { timeout: 10000 });
+        expect(row.getByRole('cell').nth(4)).toContainText(expected.subTotal, { timeout: 10000 });
+    }
+
+    async increaseQuantityByPlus1(itemName: string) {
+        await this.page.getByRole('table').getByRole('row').filter({ hasText: `${itemName}` }).locator('i').nth(1).click();
+    }
+
+    async decreaseQuantityByMinus1(itemName: string) {
+        await this.page.getByRole('table').getByRole('row').filter({ hasText: `${itemName}` }).locator('i').nth(0).click();
+    }
+
+    async enterQuantity(itemName: string, quantity: string) {
+        await this.page.getByRole('spinbutton', { name: `${itemName}` }).fill(quantity);
+        await this.page.getByRole('button', { name: 'Update cart' }).click();
+    }
+
 }
