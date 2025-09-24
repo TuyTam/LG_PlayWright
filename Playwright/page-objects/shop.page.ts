@@ -15,7 +15,7 @@ export class ShopPage {
 
     async openShop() {
         await this.shopLink.click();
-        await this.page.waitForLoadState();
+        await this.page.waitForURL(/shop/);
     }
 
     async selectViewMode(viewMode: string) {
@@ -69,4 +69,11 @@ export class ShopPage {
         console.log(`**Sorted: ${sortType} : ${prices.toString()}`);
         expect(prices).toEqual(sorted);
     }
+
+    async selectAnItem(itemName: string) {
+        await this.page.getByRole('link', { name: `${itemName}`, exact: true }).click();
+        await this.page.waitForURL(/product/);
+    }
+
+
 }

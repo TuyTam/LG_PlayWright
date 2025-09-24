@@ -4,7 +4,7 @@ import { LoginPage } from '../page-objects/login.page';
 import { ShopPage } from '../page-objects/shop.page';
 import { CartPage } from '../page-objects/cart.page';
 
-test.only('TC_09: Verify users can update quantity of product in cart', async ({ page }) => {
+test('TC_09: Verify users can update quantity of product in cart', async ({ page }) => {
     test.setTimeout(100000);
     const todoPage = new TodoPage(page);
     const loginPage = new LoginPage(page);
